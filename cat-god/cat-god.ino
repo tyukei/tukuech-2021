@@ -97,7 +97,7 @@ void clapclap(){
   digitalWrite(IN4,LOW);
   delay(2000);
 
-  servo_moter()
+  servo_moter() //run servo moter 
 
   digitalWrite(IN1,LOW);      //上記のものと逆回転になります。
   digitalWrite(IN2,HIGH);     //逆転
