@@ -1,16 +1,12 @@
 #include <Servo.h>
-Servo myservo;//Servoオブジェクトの宣言
-
 #define CLAPIN  2             // pin must be interrupt-capable
 #define CLAP_DELAY   1000      // max gap between claps to trigger
 #define IN1 9 //9番ピンを出力ピンIN1と定義してます。
 #define IN2 8 //8番ピンを出力ピンIN1と定義してます。
 #define IN3 7
 #define IN4 6
-#define PINSERVO 10
-#define ANGLE0 0
-#define ANGLE90 90
-#define ANGLE180 180
+
+Servo myservo1;
 
 volatile boolean clap = false;                // clap detected state
 boolean led_state = false;                    // LED on/off state
@@ -28,9 +24,11 @@ void setup() {
   attachInterrupt(                  // register Interrupt Service Routine (ISR):
     digitalPinToInterrupt(CLAPIN),  //   pin to watch for interrupt
     heard_clap,                     //   void function to call on interrupt
-    FALLING                         //   trigger interrupt on HIGH → LOW change
+    FALLING                        //   trigger interrupt on HIGH → LOW change
+    
   );
-  myservo.attach(PINSERVO);//servo変数をピンに割り当てる、ここでは9番ピン
+  myservo1.attach(10);
+    myservo1.write(0);
 }
 
 void loop() {
@@ -88,7 +86,9 @@ void clapclap(){
   digitalWrite(IN1,HIGH); //両方ともHIGHにするとブレーキ
   digitalWrite(IN2,LOW);     //停止（ブレーキ）
   digitalWrite(IN3,HIGH);     
-  digitalWrite(IN4,HIGH);     
+  digitalWrite(IN4,HIGH);
+  myservo1.write(180);  
+  Serial.print("servo 180");   
   delay(500);
 
    digitalWrite(IN1,LOW);      
@@ -97,12 +97,12 @@ void clapclap(){
   digitalWrite(IN4,LOW);
   delay(2000);
 
-  servo_moter() //run servo moter 
-
   digitalWrite(IN1,LOW);      //上記のものと逆回転になります。
   digitalWrite(IN2,HIGH);     //逆転
   digitalWrite(IN3,HIGH);     
-  digitalWrite(IN4,HIGH); 
+  digitalWrite(IN4,HIGH);
+  myservo1.write(0);
+  Serial.print("servo 0");
   delay(500);
 
    digitalWrite(IN1,LOW);      
@@ -127,15 +127,4 @@ void clapclap(){
 
 void heard_clap() {
   clap = true;      // just set clap state in ISR
-}
-
-void servo_moter(){
-  myservo.write(ANGLE0);
-  delay(1000);
-  myservo.write(ANGLE90);
-  delay(1000);
-  myservo.write(ANGLE180);
-  delay(1000);
-  myservo.write(ANGLE90);
-  delay(1000);
 }
